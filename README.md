@@ -1,4 +1,4 @@
-# 📊 Sistem Pendukung Keputusan (SPK) Penanganan Stunting
+# Sistem Pendukung Keputusan (SPK) Penanganan Stunting
 ## Optimasi Skala Prioritas Urgensi Intervensi Menggunakan Algoritma Fuzzy-TOPSIS
 
 <p align="center">
@@ -11,7 +11,7 @@
 
 ---
 
-# 📌 Tentang Proyek
+# Tentang Proyek
 
 Aplikasi **Sistem Pendukung Keputusan (SPK) Penanganan Stunting** merupakan sistem berbasis web yang dirancang untuk membantu tenaga kesehatan seperti **Puskesmas**, **Posyandu**, maupun petugas medis dalam menentukan **skala prioritas intervensi penanganan stunting pada balita**.
 
@@ -22,14 +22,14 @@ Sistem ini menerapkan metode:
 
 Dengan pendekatan tersebut, sistem dapat membantu proses pengambilan keputusan menjadi:
 
-✅ Lebih cepat  
-✅ Lebih objektif  
-✅ Lebih akurat  
-✅ Mengurangi subjektivitas manusia  
+- Lebih cepat  
+- Lebih objektif  
+- Lebih akurat  
+- Mengurangi subjektivitas manusia  
 
 ---
 
-# 🎯 Tujuan Pengembangan
+# Tujuan Pengembangan
 
 Tujuan utama dari pengembangan sistem ini adalah:
 
@@ -40,15 +40,15 @@ Tujuan utama dari pengembangan sistem ini adalah:
 - Sebagai media pembelajaran dan implementasi akademik Sistem Pendukung Keputusan
 
 ---
-# 🌐 Demo Aplikasi
+# Demo Aplikasi
 
 Akses publik sistem dapat dibuka melalui link berikut:
 
 🔗 [Stunting Engine](https://stunting-engine.kesug.com)
 
-# 🌟 Fitur Utama Sistem
+# Fitur Utama Sistem
 
-## 🧮 Perhitungan Fuzzy-TOPSIS
+## Perhitungan Fuzzy-TOPSIS
 Sistem dapat melakukan proses:
 - Fuzzifikasi data
 - Normalisasi matriks keputusan
@@ -58,7 +58,7 @@ Sistem dapat melakukan proses:
 
 ---
 
-## 📊 Dashboard Monitoring
+## Dashboard Monitoring
 Menampilkan:
 - Total data balita
 - Statistik status stunting
@@ -67,7 +67,7 @@ Menampilkan:
 
 ---
 
-## 📈 Grafik Statistik
+## Grafik Statistik
 Visualisasi data menggunakan grafik interaktif untuk:
 - Persentase stunting
 - Sebaran data balita
@@ -75,12 +75,12 @@ Visualisasi data menggunakan grafik interaktif untuk:
 
 ---
 
-## 🧪 Simulasi Bobot Kriteria
+## Simulasi Bobot Kriteria
 Petugas dapat mengubah bobot penilaian setiap kriteria untuk melihat perubahan hasil ranking secara dinamis.
 
 ---
 
-## 🖨 Export & Print
+## Export & Print
 Mendukung:
 - Cetak laporan
 - Export Excel
@@ -88,7 +88,7 @@ Mendukung:
 
 ---
 
-## 🌙 Light & Dark Mode
+## Light & Dark Mode
 Tampilan modern dengan:
 - Tema terang
 - Tema gelap
@@ -96,9 +96,9 @@ Tampilan modern dengan:
 
 ---
 
-# 🏗 Metode yang Digunakan
+# Metode yang Digunakan
 
-# 1️⃣ Fuzzy Logic
+# 1. Fuzzy Logic
 
 Metode fuzzy digunakan untuk:
 - Mengubah data numerik menjadi nilai linguistik
@@ -106,7 +106,7 @@ Metode fuzzy digunakan untuk:
 
 ---
 
-# 2️⃣ TOPSIS
+# 2. TOPSIS
 
 TOPSIS digunakan untuk:
 - Menghitung solusi ideal positif
@@ -118,7 +118,7 @@ Konsep utama:
 
 ---
 
-# 📊 Kriteria Penilaian
+# Kriteria Penilaian
 
 | Kode | Kriteria | Jenis | Keterangan |
 |---|---|---|---|
@@ -129,7 +129,7 @@ Konsep utama:
 
 ---
 
-# 🛠 Teknologi yang Digunakan
+# Teknologi yang Digunakan
 
 | Teknologi | Fungsi |
 |---|---|
@@ -143,7 +143,7 @@ Konsep utama:
 
 ---
 
-# 📂 Struktur Folder Project
+# Struktur Folder Project
 
 ```bash
 spk-stunting/
@@ -156,7 +156,7 @@ spk-stunting/
 
 ---
 
-# ⚙️ Persyaratan Sistem
+# Persyaratan Sistem
 
 Sebelum menjalankan project, pastikan sudah menginstall:
 
@@ -167,26 +167,26 @@ Sebelum menjalankan project, pastikan sudah menginstall:
 
 ---
 
-# 🚀 Cara Instalasi Project
+# Cara Instalasi Project
 
-1️⃣ Clone Repository
+1. Clone Repository
 
 ```bash
-git clone https://github.com/yuzhuruuu/spk-stunting.git
+git clone https://github.com/yuzhuruuu/Stunting-Engine.git
 ```
 
 ---
 
-2️⃣ Pindahkan Folder Project
-3️⃣ Jalankan XAMPP
-4️⃣ Membuat Database
-5️⃣ Import Database
-6️⃣ Konfigurasi Database
-7️⃣ Menjalankan Project
+2. Pindahkan Folder Project
+3. Jalankan XAMPP
+4. Membuat Database
+5. Import Database
+6. Konfigurasi Database
+7. Menjalankan Project
 
 ---
 
-# 📸 Tampilan Sistem
+# Tampilan Sistem
 
 ## Dashboard
 - Statistik data
@@ -208,7 +208,7 @@ git clone https://github.com/yuzhuruuu/spk-stunting.git
 
 ---
 
-# 🔄 Alur Sistem
+# Alur Sistem
 
 ```text
 Input Data Balita
@@ -228,7 +228,7 @@ Hasil Rekomendasi
 
 ---
 
-# 📈 Contoh Perhitungan
+# Contoh Perhitungan
 
 ## Normalisasi Matriks
 
@@ -262,25 +262,25 @@ Vi = D- / (D+ + D-)
 
 ---
 
-# 📌 Kelebihan Sistem
+# Kelebihan Sistem
 
-✅ Mudah digunakan  
-✅ Interface sederhana  
-✅ Perhitungan otomatis  
-✅ Responsive  
-✅ Mempermudah pengambilan keputusan  
-✅ Mengurangi human error  
+- Mudah digunakan  
+- Interface sederhana  
+- Perhitungan otomatis  
+- Responsive  
+- Mempermudah pengambilan keputusan  
+- Mengurangi human error  
 
 ---
 
-# 👨‍💻 Developer
+# Developer
 
 ### Mahasiswa Sistem Informasi
 ### Universitas Negeri Semarang (UNNES)
 
 ---
 
-# 📄 Lisensi
+# Lisensi
 
 Project ini dibuat untuk:
 - Kebutuhan akademik
@@ -290,7 +290,7 @@ Project ini dibuat untuk:
 
 ---
 
-# 🤝 Kontribusi
+# Kontribusi
 
 Jika ingin berkontribusi:
 
@@ -302,26 +302,26 @@ Jika ingin berkontribusi:
 
 ---
 
-# ⭐ Dukungan
+# Dukungan
 
 Jika project ini membantu, jangan lupa:
 
-⭐ Star repository  
+# Star repository  
 🍴 Fork project  
 🛠 Support development  
 
 ---
 
-# 📬 Kontak
+# Kontak
 
 Jika ada pertanyaan atau masukan:
 
-📧 Email: annisayusri59@gmail.com  
-🌐 Github: https://github.com/yuzhuruuu
+Email: annisayusri59@gmail.com  
+Github: https://github.com/yuzhuruuu
 
 ---
 
 <p align="center">
   <b>SPK Penanganan Stunting - Fuzzy TOPSIS</b><br>
-  Built with ❤️ using PHP Native & MySQL
+  Built using PHP Native & MySQL
 </p>
