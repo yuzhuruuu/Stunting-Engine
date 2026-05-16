@@ -40,7 +40,8 @@ Tujuan utama dari pengembangan sistem ini adalah:
 - Sebagai media pembelajaran dan implementasi akademik Sistem Pendukung Keputusan
 
 ---
-# Link Akses Publik : stunting-engine.kesug.com
+# Link Akses Publik : 
+stunting-engine.kesug.com
 
 # 🌟 Fitur Utama Sistem
 
@@ -165,7 +166,7 @@ Sebelum menjalankan project, pastikan sudah menginstall:
 
 # 🚀 Cara Instalasi Project
 
-# 1️⃣ Clone Repository
+1️⃣ Clone Repository
 
 ```bash
 git clone https://github.com/yuzhuruuu/spk-stunting.git
@@ -173,12 +174,12 @@ git clone https://github.com/yuzhuruuu/spk-stunting.git
 
 ---
 
-# 2️⃣ Pindahkan Folder Project
-# 3️⃣ Jalankan XAMPP
-# 4️⃣ Membuat Database
-# 5️⃣ Import Database
-# 6️⃣ Konfigurasi Database
-# 7️⃣ Menjalankan Project
+2️⃣ Pindahkan Folder Project
+3️⃣ Jalankan XAMPP
+4️⃣ Membuat Database
+5️⃣ Import Database
+6️⃣ Konfigurasi Database
+7️⃣ Menjalankan Project
 
 ---
 
