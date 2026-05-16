@@ -40,8 +40,11 @@ Tujuan utama dari pengembangan sistem ini adalah:
 - Sebagai media pembelajaran dan implementasi akademik Sistem Pendukung Keputusan
 
 ---
-# Link Akses Publik : 
-stunting-engine.kesug.com
+# 🌐 Demo Aplikasi
+
+Akses publik sistem dapat dibuka melalui link berikut:
+
+🔗 [Stunting Engine](https://stunting-engine.kesug.com)
 
 # 🌟 Fitur Utama Sistem
 
