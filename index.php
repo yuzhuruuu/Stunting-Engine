@@ -12,7 +12,7 @@ if (isset($_POST['tambah_balita'])) {
     $breastfeeding = $_POST['breastfeeding'];
     $stunting_label = $_POST['stunting_label'];
 
-    $query_add = "INSERT INTO balita (gender, age, birth_weight, birth_length, body_weight, body_length, breastfeeding, stunting_label) 
+    $query_add = "INSERT INTO balita_simulasi (gender, age, birth_weight, birth_length, body_weight, body_length, breastfeeding, stunting_label) 
                   VALUES ('$gender', '$age', '$birth_weight', '$birth_length', '$body_weight', '$body_length', '$breastfeeding', '$stunting_label')";
     
     if (mysqli_query($koneksi, $query_add)) {
@@ -201,6 +201,11 @@ $total_normal = $total_balita - $total_stunted;
             <button class="btn btn-outline-primary fw-bold rounded-3 d-flex align-items-center justify-content-center border-2" data-bs-toggle="modal" data-bs-target="#modalTambahData">
                 <i class="fa-solid fa-plus me-2"></i> Input Rekam Medis
             </button>
+        </div>
+        <div class="col-md-3 mb-3 d-grid">
+            <a href="reset_simulasi.php" class="btn btn-outline-danger fw-bold rounded-3 border-2 d-flex align-items-center justify-content-center" onclick="return confirm('Apakah kamu yakin ingin menghapus semua data di tabel simulasi?')">
+                <i class="fa-solid fa-trash-can me-2"></i> Bersihkan Data Simulasi
+            </a>
         </div>
         <div class="col-md-3 mb-3 d-grid">
             <button type="submit" form="form-hitung-engine" class="btn btn-primary fw-bold shadow-sm rounded-3 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); border:none;">
@@ -505,7 +510,7 @@ function prosesSkriningFuzzy() {
 
     if (selisih_tinggi < -5 && selisih_berat < -2) {
         wrapper.className = "p-4 rounded-3 text-center border border-danger bg-danger bg-opacity-10 text-danger shadow-sm";
-        title.innerHTML = "🚨 PRIORITAS KRITIS: Terindikasi Stunting & Gizi Buruk";
+        title.innerHTML = "PRIORITAS KRITIS: Terindikasi Stunting & Gizi Buruk";
         desc.innerHTML = `Balita berumur ${age} bulan mengalami keterlambatan pertumbuhan tinggi (${body_length} cm) sekaligus defisit berat badan berat (${body_weight} kg). Anak ini wajib masuk daftar prioritas teratas intervensi gizi sistem SPK.`;
     } else if (selisih_tinggi < -5 && selisih_berat >= -2) {
         wrapper.className = "p-4 rounded-3 text-center border border-warning bg-warning bg-opacity-10 text-warning-emphasis shadow-sm";

@@ -1,5 +1,6 @@
 <?php
 include 'koneksi.php';
+session_start();
 ini_set('memory_limit', '512M');
 set_time_limit(300);
 
@@ -11,10 +12,24 @@ $w4 = isset($_POST['w_asi']) ? intval($_POST['w_asi']) : 2;
 
 $bobot = [$w1, $w2, $w3, $w4]; 
 
-$query = "SELECT * FROM balita";
+$query = "SELECT * FROM balita_simulasi";
 $result = mysqli_query($koneksi, $query);
 $dataset = [];
 while ($row = mysqli_fetch_assoc($result)) { $dataset[] = $row; }
+
+if (empty($dataset)) {
+    // Jika tidak ada data simulasi, gunakan dataset utama balita (misalnya 10k record)
+    $query = "SELECT * FROM balita";
+    $result = mysqli_query($koneksi, $query);
+    $dataset = [];
+    while ($row = mysqli_fetch_assoc($result)) { $dataset[] = $row; }
+}
+
+if (empty($dataset)) {
+    unset($_SESSION['hasil_spk']);
+    echo "<script>alert('Tidak ada data untuk proses SPK. Tambahkan data simulasi atau pastikan dataset utama tersedia.'); window.location='index.php';</script>";
+    exit();
+}
 
 function hitungFuzzyTinggi($age, $body_length) {
     $tinggi_ideal_per_bulan = 50 + ($age * 0.7); 
