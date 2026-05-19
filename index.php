@@ -2,6 +2,53 @@
 include 'koneksi.php'; 
 
 // PROSES INPUT DATA REKAM MEDIS BARU DARI MODAL
+$success_message = '';
+$error_message = '';
+$rekomendasi_balita = null;
+
+function getRekomendasiGizi($age, $body_weight, $body_length, $breastfeeding, $label) {
+    $ideal_height = 50 + ($age * 0.7);
+    $ideal_weight = 3 + ($age * 0.25);
+    $height_gap = $body_length - $ideal_height;
+    $weight_gap = $body_weight - $ideal_weight;
+
+    $rekomendasi = [
+        'status' => '',
+        'headline' => '',
+        'details' => '',
+        'foods' => [],
+        'advice' => ''
+    ];
+
+    if ($label === 'Yes' || $height_gap < -5 || $weight_gap < -2) {
+        $rekomendasi['status'] = 'Stunting / Gizi Buruk';
+        $rekomendasi['headline'] = 'Segera Prioritaskan Perbaikan Gizi dan Konsultasi ke Puskesmas';
+        $rekomendasi['details'] = 'Balita menunjukkan tanda stunting atau defisit gizi serius berdasarkan data input. Tingkatkan asupan nutrisi tinggi protein dan energi segera.';
+        $rekomendasi['foods'] = ['Telur ayam kampung', 'Ikan lokal (tuna, tongkol, bandeng)', 'Daging ayam tanpa kulit', 'Tahu dan tempe', 'Susu formula / ASI lanjutan', 'Sayur hijau (bayam, kangkung)', 'Buah lokal (pisang, pepaya)'];
+        $rekomendasi['advice'] = 'Bawa balita ke Puskesmas terdekat untuk pemeriksaan gizi dan program intervensi, lalu catat perkembangan setiap 2 minggu.';
+    } elseif ($height_gap < -5) {
+        $rekomendasi['status'] = 'Indikasi Stunting Ringan';
+        $rekomendasi['headline'] = 'Perbaiki MPASI dengan Fokus Protein Hewani';
+        $rekomendasi['details'] = 'Tinggi badan berada di bawah harapan usia, walau berat badan tidak terlalu rendah. Fokus pada makanan padat nutrisi dan pemantauan rutin.';
+        $rekomendasi['foods'] = ['Bubur ikan', 'Telur rebus', 'Ayam suwir', 'Tahu tempe', 'Sayur bayam', 'Buah pisang'];
+        $rekomendasi['advice'] = 'Konsultasikan status pertumbuhan ke petugas gizi Puskesmas jika tidak ada perbaikan dalam 1 bulan.';
+    } elseif ($weight_gap < -2) {
+        $rekomendasi['status'] = 'Indikasi Gizi Kurang';
+        $rekomendasi['headline'] = 'Tambahkan Asupan Energi dan Protein Setiap Hari';
+        $rekomendasi['details'] = 'Berat badan lebih rendah dari target usia, meski tinggi badan relatif normal. Berikan makanan lebih sering dengan kalori seimbang.';
+        $rekomendasi['foods'] = ['Susu formula / ASI lanjutan', 'Pisang', 'Daging ayam suwir', 'Tahu tempe goreng', 'Kacang hijau', 'Sayuran berdaun'];
+        $rekomendasi['advice'] = 'Jadwalkan pemeriksaan gizi di Puskesmas jika belum ada peningkatan dalam 2 minggu.';
+    } else {
+        $rekomendasi['status'] = 'Status Gizi Baik';
+        $rekomendasi['headline'] = 'Pertahankan Pola MPASI Seimbang dan Pantau Secara Rutin';
+        $rekomendasi['details'] = 'Data input menunjukkan perkembangan sesuai usia. Terus dukung dengan variasi makanan gizi seimbang dan ASI/MPASI berkualitas.';
+        $rekomendasi['foods'] = ['ASI atau susu lanjutan', 'Sayuran hijau', 'Buah lokal', 'Protein hewani ringan', 'Sumber karbohidrat sehat seperti nasi tim'];
+        $rekomendasi['advice'] = 'Lakukan pemantauan rutin di posyandu atau Puskesmas agar tumbuh kembang tetap optimal.';
+    }
+
+    return $rekomendasi;
+}
+
 if (isset($_POST['tambah_balita'])) {
     $gender = $_POST['gender'];
     $age = $_POST['age'];
@@ -16,9 +63,10 @@ if (isset($_POST['tambah_balita'])) {
                   VALUES ('$gender', '$age', '$birth_weight', '$birth_length', '$body_weight', '$body_length', '$breastfeeding', '$stunting_label')";
     
     if (mysqli_query($koneksi, $query_add)) {
-        echo "<script>alert('Data balita berhasil ditambahkan!'); window.location='index.php';</script>";
+        $success_message = 'Data balita berhasil ditambahkan.';
+        $rekomendasi_balita = getRekomendasiGizi($age, $body_weight, $body_length, $breastfeeding, $stunting_label);
     } else {
-        echo "<script>alert('Gagal menambahkan data: " . mysqli_error($koneksi) . "');</script>";
+        $error_message = 'Gagal menambahkan data: ' . mysqli_error($koneksi);
     }
 }
 
@@ -173,6 +221,51 @@ $total_normal = $total_balita - $total_stunted;
         <h1 class="fw-bold mb-2" style="letter-spacing: -1px;">Sistem Pendukung Keputusan Penanganan Stunting</h1>
         <p class="mb-0 fs-5 opacity-90 fw-light">Optimasi Skala Prioritas Menggunakan Algoritma <span class="fw-bold">Fuzzy-TOPSIS</span></p>
     </div>
+
+    <?php if (!empty($success_message) || !empty($error_message)): ?>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert <?= !empty($success_message) ? 'alert-success' : 'alert-danger'; ?> rounded-3 shadow-sm" role="alert">
+                <?= !empty($success_message) ? htmlspecialchars($success_message) : htmlspecialchars($error_message); ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($rekomendasi_balita)): ?>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card card-custom shadow-sm border-start border-4 border-warning p-4">
+                <div class="d-flex align-items-start gap-3 mb-3">
+                    <div class="badge bg-warning text-dark rounded-pill py-2 px-3 fw-semibold">Rekomendasi Gizi Otomatis</div>
+                    <div>
+                        <h5 class="fw-bold mb-1"><?= htmlspecialchars($rekomendasi_balita['status']); ?></h5>
+                        <p class="mb-0 text-muted"><?= htmlspecialchars($rekomendasi_balita['details']); ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7 mb-3">
+                        <div class="bg-white rounded-3 p-3 shadow-sm">
+                            <h6 class="fw-semibold mb-2">Daftar Bahan Makanan Lokal Tinggi Protein</h6>
+                            <ul class="mb-2">
+                                <?php foreach ($rekomendasi_balita['foods'] as $food): ?>
+                                    <li><?= htmlspecialchars($food); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mb-3">
+                        <div class="bg-light rounded-3 p-3 h-100">
+                            <h6 class="fw-semibold mb-2">Tindakan Rekomendasi</h6>
+                            <p class="mb-3"><?= htmlspecialchars($rekomendasi_balita['advice']); ?></p>
+                            <div class="badge bg-danger text-white px-3 py-2">Konsultasi ke Puskesmas terdekat</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <div class="row mb-5">
         <div class="col-md-3 mb-3">
