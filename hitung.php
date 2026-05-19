@@ -52,10 +52,10 @@ foreach ($dataset as $data) {
     $c4 = $c4_val;
 
     $matriks_x[] = [
-        'id' => $data['id'], 'gender' => $data['gender'], 'age' => $data['age'],
-        'body_length' => $data['body_length'], 'stunting_label' => $data['stunting_label'],
-        'kriteria' => [$c1, $c2, $c3, $c4]
-    ];
+            'id' => $data['id'], 'gender' => $data['gender'], 'age' => $data['age'],
+            'body_length' => $data['body_length'], 'body_weight' => $data['body_weight'], 'breastfeeding' => $data['breastfeeding'], 'stunting_label' => $data['stunting_label'],
+            'kriteria' => [$c1, $c2, $c3, $c4]
+        ];
 
     $pembagi[0] += pow($c1, 2); $pembagi[1] += pow($c2, 2); $pembagi[2] += pow($c3, 2); $pembagi[3] += pow($c4, 2);
 }
@@ -70,10 +70,10 @@ foreach ($matriks_x as $x) {
     $y4 = ($x['kriteria'][3] / $pembagi[3]) * $bobot[3];
 
     $matriks_y[] = [
-        'id' => $x['id'], 'gender' => $x['gender'], 'age' => $x['age'],
-        'body_length' => $x['body_length'], 'stunting_label' => $x['stunting_label'],
-        'y' => [$y1, $y2, $y3, $y4]
-    ];
+            'id' => $x['id'], 'gender' => $x['gender'], 'age' => $x['age'],
+            'body_length' => $x['body_length'], 'body_weight' => $x['body_weight'], 'breastfeeding' => $x['breastfeeding'], 'stunting_label' => $x['stunting_label'],
+            'y' => [$y1, $y2, $y3, $y4]
+        ];
 }
 
 $a_positif = [
@@ -97,9 +97,9 @@ foreach ($matriks_y as $y) {
     $v = ($d_positif + $d_negatif == 0) ? 0 : $d_negatif / ($d_positif + $d_negatif);
 
     $hasil_ranking[] = [
-        'id' => $y['id'], 'gender' => $y['gender'], 'age' => $y['age'],
-        'body_length' => $y['body_length'], 'stunting_label' => $y['stunting_label'], 'skor_v' => $v
-    ];
+            'id' => $y['id'], 'gender' => $y['gender'], 'age' => $y['age'],
+            'body_length' => $y['body_length'], 'body_weight' => $y['body_weight'], 'breastfeeding' => $y['breastfeeding'], 'stunting_label' => $y['stunting_label'], 'skor_v' => $v
+        ];
 }
 
 usort($hasil_ranking, function ($a, $b) { return $b['skor_v'] <=> $a['skor_v']; });

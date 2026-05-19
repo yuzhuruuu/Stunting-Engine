@@ -2,6 +2,28 @@
 session_start();
 if (!isset($_SESSION['hasil_spk'])) { header("Location: index.php"); exit(); }
 $hasil_ranking = $_SESSION['hasil_spk'];
+
+function getRekomendasiGizi($age, $body_weight, $body_length, $breastfeeding, $label) {
+    $ideal_height = 50 + ($age * 0.7);
+    $ideal_weight = 3 + ($age * 0.25);
+    $height_gap = $body_length - $ideal_height;
+    $weight_gap = $body_weight - $ideal_weight;
+
+    $rekomendasi = ['status' => '', 'headline' => '', 'details' => '', 'foods' => [], 'advice' => ''];
+
+    if ($label === 'Yes' || $height_gap < -5 || $weight_gap < -2) {
+        $rekomendasi['status'] = 'Stunting / Gizi Buruk';
+        $rekomendasi['details'] = 'Balita menunjukkan tanda stunting atau defisit gizi serius berdasarkan data input. Tingkatkan asupan nutrisi tinggi protein dan energi segera.';
+        $rekomendasi['foods'] = ['Telur ayam kampung', 'Ikan lokal (tuna, tongkol)', 'Daging ayam tanpa kulit', 'Tahu dan tempe', 'Sayur hijau (bayam)'];
+        $rekomendasi['advice'] = 'Bawa balita ke Puskesmas terdekat untuk pemeriksaan gizi dan program intervensi segera.';
+    } elseif ($weight_gap < -2) {
+        $rekomendasi['status'] = 'Indikasi Gizi Kurang';
+        $rekomendasi['details'] = 'Berat badan lebih rendah dari target usia. Berikan makanan lebih sering dengan kalori seimbang.';
+        $rekomendasi['foods'] = ['Susu formula / ASI lanjutan', 'Pisang', 'Daging ayam suwir', 'Kacang hijau'];
+        $rekomendasi['advice'] = 'Jadwalkan pemeriksaan gizi di Puskesmas jika belum ada peningkatan dalam 2 minggu.';
+    }
+    return $rekomendasi;
+}
 ?>
 
 <!DOCTYPE html>
@@ -156,17 +178,55 @@ $hasil_ranking = $_SESSION['hasil_spk'];
                     <tbody>
                         <?php 
                         $no = 1;
+                        $modals_html = ''; // Variabel untuk menampung kode popup modal gizi
+                        
                         foreach ($hasil_ranking as $rank) { 
-                            // PERBAIKAN LOGIKA: Sinkronisasi Skor V dengan Label Status Validasi Asli
                             if ($rank['stunting_label'] == 'Yes') {
-                                if ($rank['skor_v'] >= 0.50) {
-                                    $rekomendasi = '<span class="text-danger fw-bold"><i class="fa-solid fa-circle-radiation me-1"></i> Intervensi Darurat (PMT Pokok & Nutrisi Klinis)</span>';
-                                } else {
-                                    $rekomendasi = '<span class="text-warning fw-medium"><i class="fa-solid fa-triangle-exclamation me-1"></i> Prioritas Sedang (Edukasi Gizi & Susu Tambahan)</span>';
-                                }
+                                // Buat Tombol untuk yang stunting
+                                $rekomendasi_btn = '<button type="button" class="btn btn-sm btn-warning fw-bold text-dark rounded-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRek' . $rank['id'] . '"><i class="fa-solid fa-utensils me-1"></i> Lihat Rekomendasi</button>';
+                                
+                                // Tarik perhitungan gizinya
+                                $rek_data = getRekomendasiGizi($rank['age'], $rank['body_weight'], $rank['body_length'], $rank['breastfeeding'], $rank['stunting_label']);
+                                
+                                // Susun list makanan
+                                $foods_list = '';
+                                foreach ($rek_data['foods'] as $food) { $foods_list .= '<li>' . htmlspecialchars($food) . '</li>'; }
+
+                                // Buat kerangka modal popup-nya (disimpan di memori dulu)
+                                $modals_html .= '
+                                <div class="modal fade" id="modalRek' . $rank['id'] . '" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content card-custom p-3">
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="modal-title fw-bold text-warning"><i class="fa-solid fa-notes-medical me-2"></i> Rekomendasi Gizi (ID Balita: #'.$rank['id'].')</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-warning border-warning border-2 rounded-3 mb-4">
+                                                    <h5 class="fw-bold mb-1">'.htmlspecialchars($rek_data['status']).'</h5>
+                                                    <p class="mb-0 text-dark">'.htmlspecialchars($rek_data['details']).'</p>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-7 mb-3">
+                                                        <div class="bg-light rounded-3 p-3 border h-100">
+                                                            <h6 class="fw-semibold mb-2">Daftar Bahan Makanan Lokal:</h6>
+                                                            <ul class="mb-0">'.$foods_list.'</ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-5 mb-3">
+                                                        <div class="bg-danger bg-opacity-10 rounded-3 p-3 border border-danger h-100">
+                                                            <h6 class="fw-semibold text-danger mb-2">Tindakan Khusus:</h6>
+                                                            <p class="mb-0 text-dark">'.htmlspecialchars($rek_data['advice']).'</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>';
                             } else {
-                                // Jika dari data rekam medis aslinya Normal, rekomendasinya harus aman
-                                $rekomendasi = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i> Pemantauan Rutin (Kondisi Tumbuh Normal)</span>';
+                                // Tampilan untuk balita normal
+                                $rekomendasi_btn = '<span class="text-success fw-medium"><i class="fa-solid fa-circle-check me-1"></i> Pemantauan Rutin (Normal)</span>';
                             }
                         ?>
                         <tr>
@@ -187,7 +247,7 @@ $hasil_ranking = $_SESSION['hasil_spk'];
                                 </span>
                             </td>
                             <td class="fw-bold text-primary"><?= number_format($rank['skor_v'], 4); ?></td>
-                            <td><?= $rekomendasi; ?></td>
+                            <td><?= $rekomendasi_btn; ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -196,6 +256,8 @@ $hasil_ranking = $_SESSION['hasil_spk'];
         </div>
     </div>
 </div>
+
+</div> <?= isset($modals_html) ? $modals_html : ''; ?>
 
 <footer class="footer-custom py-4 text-center">
     <p class="mb-1 fw-medium">&copy; 2026 Tim Proyek Tugas Akhir SPK Stunting.</p>
