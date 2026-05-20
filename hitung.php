@@ -4,7 +4,6 @@ session_start();
 ini_set('memory_limit', '512M');
 set_time_limit(300);
 
-// Ambil data bobot dari form dashboard utama, jika tidak ada, pakai default bawaan
 $w1 = isset($_POST['w_umur']) ? intval($_POST['w_umur']) : 2;
 $w2 = isset($_POST['w_bblahir']) ? intval($_POST['w_bblahir']) : 3;
 $w3 = isset($_POST['w_tinggi']) ? intval($_POST['w_tinggi']) : 5;
@@ -18,7 +17,6 @@ $dataset = [];
 while ($row = mysqli_fetch_assoc($result)) { $dataset[] = $row; }
 
 if (empty($dataset)) {
-    // Jika tidak ada data simulasi, gunakan dataset utama balita (misalnya 10k record)
     $query = "SELECT * FROM balita";
     $result = mysqli_query($koneksi, $query);
     $dataset = [];
@@ -77,17 +75,17 @@ foreach ($matriks_x as $x) {
 }
 
 $a_positif = [
-    min(array_column(array_column($matriks_y, 'y'), 0)), // FIX: Min C1 (Makin muda makin prioritas)
-    min(array_column(array_column($matriks_y, 'y'), 1)), // Min C2 (Prioritas BB lahir rendah)
-    min(array_column(array_column($matriks_y, 'y'), 2)), // Min C3 (Prioritas yang pendek/stunted)
-    max(array_column(array_column($matriks_y, 'y'), 3))  // Max C4 (Prioritas Tidak ASI)
+    min(array_column(array_column($matriks_y, 'y'), 0)), 
+    min(array_column(array_column($matriks_y, 'y'), 1)), 
+    min(array_column(array_column($matriks_y, 'y'), 2)), 
+    max(array_column(array_column($matriks_y, 'y'), 3))  
 ];
 
 $a_negatif = [
-    max(array_column(array_column($matriks_y, 'y'), 0)), // FIX: Max C1
-    max(array_column(array_column($matriks_y, 'y'), 1)), // Max C2
-    max(array_column(array_column($matriks_y, 'y'), 2)), // Max C3
-    min(array_column(array_column($matriks_y, 'y'), 3))  // Min C4
+    max(array_column(array_column($matriks_y, 'y'), 0)), 
+    max(array_column(array_column($matriks_y, 'y'), 1)), 
+    max(array_column(array_column($matriks_y, 'y'), 2)), 
+    min(array_column(array_column($matriks_y, 'y'), 3))  
 ];
 
 $hasil_ranking = [];

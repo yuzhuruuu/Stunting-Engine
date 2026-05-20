@@ -3,26 +3,71 @@ session_start();
 if (!isset($_SESSION['hasil_spk'])) { header("Location: index.php"); exit(); }
 $hasil_ranking = $_SESSION['hasil_spk'];
 
+// Akurasi Rekomendasi Gizi Berdasarkan Standar Kelompok Usia Medis
 function getRekomendasiGizi($age, $body_weight, $body_length, $breastfeeding, $label) {
-    $ideal_height = 50 + ($age * 0.7);
-    $ideal_weight = 3 + ($age * 0.25);
-    $height_gap = $body_length - $ideal_height;
-    $weight_gap = $body_weight - $ideal_weight;
+    $status = 'Stunting / Gizi Buruk';
+    $details = '';
+    $foods = [];
+    $advice = '';
 
-    $rekomendasi = ['status' => '', 'headline' => '', 'details' => '', 'foods' => [], 'advice' => ''];
+    // KATEGORI 1: Usia Bayi Baru Lahir - 6 Bulan (Hanya boleh ASI)
+    if ($age <= 6) {
+        $status = 'Stunting / Risiko Gizi Buruk (Usia 0-6 Bulan)';
+        $details = 'Balita berada pada periode krusial awal kehidupan. Pada usia ini, struktur pencernaan bayi belum siap menerima makanan padat. Intervensi wajib berfokus pada kuantitas dan kualitas ASI.';
+        $foods = [
+            'ASI Eksklusif (Berikan sesering mungkin/on-demand)',
+            'Susu Formula Khusus Gizi Buruk (Hanya jika direkomendasikan Dokter Spesialis)',
+            'Nutrisi Tambahan Tinggi Protein untuk Ibu Menyusui (Ibu wajib konsumsi zat besi & kalori cukup)'
+        ];
+        $advice = 'Segera rujuk ke fasilitas kesehatan/Dokter Anak untuk pemeriksaan klinis. Ibu disarankan mengikuti konseling laktasi di Puskesmas untuk optimalisasi produksi ASI.';
+    } 
 
-    if ($label === 'Yes' || $height_gap < -5 || $weight_gap < -2) {
-        $rekomendasi['status'] = 'Stunting / Gizi Buruk';
-        $rekomendasi['details'] = 'Balita menunjukkan tanda stunting atau defisit gizi serius berdasarkan data input. Tingkatkan asupan nutrisi tinggi protein dan energi segera.';
-        $rekomendasi['foods'] = ['Telur ayam kampung', 'Ikan lokal (tuna, tongkol)', 'Daging ayam tanpa kulit', 'Tahu dan tempe', 'Sayur hijau (bayam)'];
-        $rekomendasi['advice'] = 'Bawa balita ke Puskesmas terdekat untuk pemeriksaan gizi dan program intervensi segera.';
-    } elseif ($weight_gap < -2) {
-        $rekomendasi['status'] = 'Indikasi Gizi Kurang';
-        $rekomendasi['details'] = 'Berat badan lebih rendah dari target usia. Berikan makanan lebih sering dengan kalori seimbang.';
-        $rekomendasi['foods'] = ['Susu formula / ASI lanjutan', 'Pisang', 'Daging ayam suwir', 'Kacang hijau'];
-        $rekomendasi['advice'] = 'Jadwalkan pemeriksaan gizi di Puskesmas jika belum ada peningkatan dalam 2 minggu.';
+    // KATEGORI 2: Usia 7 - 11 Bulan (Fase MPASI Awal / Bubur Lumat)
+    elseif ($age > 6 && $age <= 11) {
+        $status = 'Stunting / Indikasi Gizi Kurang (Usia 7-11 Bulan)';
+        $details = 'Balita berada pada fase transisi makanan pendamping. Hambatan pertumbuhan di usia ini wajib dikejar dengan MPASI yang padat energi dan kaya akan zat besi serta protein hewani lumat.';
+        $foods = [
+            'Bubur saring/lumat yang diperkaya lemak tambahan (Minyak kelapa/Santan/Mentega)',
+            'Telur ayam rebus (dihancurkan lembut)',
+            'Puree hati ayam atau ikan lokal (Lele, Kembung, Tuna lumat)',
+            'ASI tetap dilanjutkan sebagai sumber nutrisi utama'
+        ];
+        $advice = 'Berikan MPASI secara bertahap 2-3 kali sehari. Kunjungi Puskesmas atau Posyandu terdekat untuk mengambil jatah Biskuit PMT (Pemberian Makanan Tambahan) resmi.';
+    } 
+
+    // KATEGORI 3: Usia 12 - 23 Bulan (Fase Emas / Akhir 1000 HPK)
+    elseif ($age >= 12 && $age <= 23) {
+        $status = 'Stunting / Prioritas Intervensi (Usia 12-23 Bulan)';
+        $details = 'Masa kritis akhir periode 1000 Hari Pertama Kehidupan (HPK). Penanganan di usia ini sangat menentukan agar dampak stunting tidak bersifat permanen pada kognitif anak.';
+        $foods = [
+            'Nasi tim lembek dengan lauk cincang kasar',
+            'Telur ayam kampung (Target: 1-2 butir per hari jika tidak alergi)',
+            'Ikan lokal tinggi Omega-3 (Kembung, Bandeng, Tongkol cincang)',
+            'Daging ayam/sapi cincang atau tahu tempe lembut',
+            'Susu pertumbuhan pendamping'
+        ];
+        $advice = 'Pastikan anak mendapatkan makanan selingan (snack sehat) 1-2 kali di antara jam makan utama. Lakukan penimbangan berat dan tinggi badan secara ketat di Puskesmas setiap 2 minggu.';
+    } 
+
+    // KATEGORI 4: Usia 24 - 59 Bulan (Fase Makanan Keluarga)
+    else {
+        $status = 'Stunting / Pemulihan Gizi Kronis (Usia 24-59 Bulan)';
+        $details = 'Balita sudah mampu mengonsumsi menu makanan keluarga penuh. Intervensi difokuskan pada variasi zat gizi mikro dan perbaikan pola makan anak untuk mendongkrak nafsu makan serta imunitas.';
+        $foods = [
+            'Makanan keluarga seimbang (Nasi, Lauk pauk, Sayuran)',
+            'Lauk protein hewani konsisten (Telur dadar/rebus, Ayam, Daging, Ikan segar)',
+            'Sayuran pelengkap gizi mikro (Bayam, Daun Kelor, Wortel)',
+            'Buah-buahan lokal penambah vitamin (Pisang, Pepaya, Jeruk)'
+        ];
+        $advice = 'Tingkatkan frekuensi makan menjadi 3 kali makan utama dan 2 kali makanan selingan. Batasi jajanan rendah nutrisi (snack kemasan) sebelum jam makan. Konsultasikan perkembangan dengan petugas gizi.';
     }
-    return $rekomendasi;
+
+    return [
+        'status' => $status,
+        'details' => $details,
+        'foods' => $foods,
+        'advice' => $advice
+    ];
 }
 ?>
 
@@ -260,7 +305,7 @@ function getRekomendasiGizi($age, $body_weight, $body_length, $breastfeeding, $l
 </div> <?= isset($modals_html) ? $modals_html : ''; ?>
 
 <footer class="footer-custom py-4 text-center">
-    <p class="mb-1 fw-medium">&copy; 2026 Tim Proyek Tugas Akhir SPK Stunting.</p>
+    <p class="mb-1 fw-medium">&copy; @ 2026 Tim Proyek Tugas Akhir SPK-Stunting.</p>
     <small class="opacity-75">Sistem Informasi &bull; Universitas Negeri Semarang (UNNES)</small>
 </footer>
 
